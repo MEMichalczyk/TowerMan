@@ -71,8 +71,8 @@ public class Player extends Sprite {
         super(texture);
         
         // Set initial position and size of the player
-        setPosition(1, 0);
-        setSize(1, 1);
+        setPosition(100, 100);
+        setSize(32, 32);
 
         // Initialize player-specific variables
         velocityY = 0f;
@@ -81,6 +81,11 @@ public class Player extends Sprite {
         onGround = true;
     }
     
+    public void move() {
+        // Implement player movement logic here, such as applying gravity and handling jumps
+        
+    }
+
     @Override
     public String toString() {
         return "Player{" +

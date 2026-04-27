@@ -1,6 +1,8 @@
 package io.github.TowerMan;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -20,6 +22,9 @@ public class FirstScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        // Wipe the screen so that we don't see anything from a previous frame.
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
+
         batch.begin();
         player.draw(batch);
         batch.end();
