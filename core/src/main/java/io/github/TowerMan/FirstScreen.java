@@ -1,17 +1,28 @@
 package io.github.TowerMan;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
+
+    private SpriteBatch batch;
+    private Player player;
+    private Texture playerTexture;
+
     @Override
     public void show() {
-        // Prepare your screen here.
+        batch = new SpriteBatch();
+        playerTexture = new Texture("Player.png");
+        player = new Player(playerTexture);
     }
 
     @Override
     public void render(float delta) {
-        // Draw your screen here. "delta" is the time since last render in seconds.
+        batch.begin();
+        player.draw(batch);
+        batch.end();
     }
 
     @Override
@@ -40,6 +51,6 @@ public class FirstScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Destroy screen's assets here.
+        // Dispose of assets when no longer needed to free up resources.
     }
 }
