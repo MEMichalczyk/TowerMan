@@ -2,6 +2,7 @@ package io.github.TowerMan;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -21,6 +22,9 @@ public class Player extends Sprite {
 
     // 1 for right, -1 for left facing direction
     private int facingDirection = 1;
+
+    // Sound for player jump
+    private Sound playerJump;
 
     // Getters and setters for player variables
     public float getVelocityY() {
@@ -81,6 +85,7 @@ public class Player extends Sprite {
         gravity = -900f;
         jumpVelocity = 250f;
         onGround = true;
+        playerJump = Gdx.audio.newSound(Gdx.files.internal("playerJump.mp3"));
     }
     
     public void move() {
@@ -106,12 +111,13 @@ public class Player extends Sprite {
             facingDirection = 1;
         }
 
+        // LOOK INTO GETTING A BETTER JUMP! HOLD TO JUMP HIGHER, ETC. ----------------------------------------------------
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround) {
             velocityY = jumpVelocity;
             onGround = false;
 
             //ADD JUMP SOUND LATER
-            //jumpSound.play();
+            playerJump .play(0.2f); // Adjust volume as needed
         }
 
         //Bounds? Check later ----------------------------------------------------
@@ -122,6 +128,9 @@ public class Player extends Sprite {
         if (!onGround) {
             velocityY += gravity * deltaTime;
             this.translateY(velocityY * deltaTime);
+
+            //JUMP HOLD CHECK WILL PROBABLY GO HERE LATER ----------------------------------------------------
+
 
             // Check if the player has landed on the ground (y <= 100 in this example)
             if (this.getY() <= 0) {//WE WILL NEED TO CHANGE THIS ONCE I APPLY THE MAP FROM TILED! -------------------------------
