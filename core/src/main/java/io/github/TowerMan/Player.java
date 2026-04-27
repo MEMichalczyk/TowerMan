@@ -1,5 +1,7 @@
 package io.github.TowerMan;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
@@ -71,19 +73,63 @@ public class Player extends Sprite {
         super(texture);
         
         // Set initial position and size of the player
-        setPosition(100, 100);
+        setPosition(0, 100);
         setSize(32, 32);
 
         // Initialize player-specific variables
         velocityY = 0f;
-        gravity = -15f;
-        jumpVelocity = 5f;
+        gravity = -900f;
+        jumpVelocity = 250f;
         onGround = true;
     }
     
     public void move() {
         // Implement player movement logic here, such as applying gravity and handling jumps
-        
+        float speed = 100f; // Example horizontal speed
+        float deltaTime = Gdx.graphics.getDeltaTime();
+
+        // Move left with the left arrow key or A key
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+            this.translateX(-speed * deltaTime);
+
+            // Flip the sprite to face left
+            this.setFlip(true, false);
+            facingDirection = -1;
+        }
+
+        // Move right with the right arrow key or D key
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+            this.translateX(speed * deltaTime);
+
+            // Flip the sprite to face right
+            this.setFlip(false, false);
+            facingDirection = 1;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround) {
+            velocityY = jumpVelocity;
+            onGround = false;
+
+            //ADD JUMP SOUND LATER
+            //jumpSound.play();
+        }
+
+        //Bounds? Check later ----------------------------------------------------
+    }
+
+    // Gravity
+    public void applyGravity(float deltaTime) {
+        if (!onGround) {
+            velocityY += gravity * deltaTime;
+            this.translateY(velocityY * deltaTime);
+
+            // Check if the player has landed on the ground (y <= 100 in this example)
+            if (this.getY() <= 0) {//WE WILL NEED TO CHANGE THIS ONCE I APPLY THE MAP FROM TILED! -------------------------------
+                this.setY(0);
+                onGround = true;
+                velocityY = 0;
+            }
+        }
     }
 
     @Override

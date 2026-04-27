@@ -23,6 +23,10 @@ public class FirstScreen implements Screen {
     @Override
     public void render(float delta) {
         // Wipe the screen so that we don't see anything from a previous frame.
+
+        player.move();
+        player.applyGravity(delta);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 
         batch.begin();
