@@ -78,7 +78,7 @@ public class Player extends Sprite {
         
         // Set initial position and size of the player
         setPosition(0, 0); //This will change with map.
-        setSize(32, 32);
+        setSize(32, 32); // Adjust size as needed
 
         // Initialize player-specific variables
         velocityY = 0f;

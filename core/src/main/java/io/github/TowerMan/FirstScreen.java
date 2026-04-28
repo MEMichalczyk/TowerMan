@@ -44,17 +44,17 @@ public class FirstScreen implements Screen {
         player.move();
         player.applyGravity(delta);
 
-        System.out.println(player);
+        //System.out.println(player);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 
-        batch.begin();
         // Render the map
         camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();
 
         // Render the player
+        batch.begin();
         player.draw(batch);
         batch.end();
     }
@@ -83,8 +83,12 @@ public class FirstScreen implements Screen {
         // This method is called when another screen replaces this one.
     }
 
+    // Dispose of assets when the screen is destroyed.
     @Override
     public void dispose() {
-        // Dispose of assets when no longer needed to free up resources.
+        batch.dispose();
+        playerTexture.dispose();
+        map.dispose();
+        mapRenderer.dispose();
     }
 }

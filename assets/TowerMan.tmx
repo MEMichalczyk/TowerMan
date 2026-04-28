@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="left-up" width="28" height="32" tilewidth="8" tileheight="8" infinite="0" nextlayerid="14" nextobjectid="63">
- <tileset firstgid="1" source="Dungeon Tile Set.tsx"/>
- <tileset firstgid="1081" source=":/automap-tiles.tsx"/>
+ <tileset firstgid="1" name="Dungeon Tile Set" tilewidth="8" tileheight="8" tilecount="1080" columns="30">
+  <image source="Dungeon Tile Set.png" width="240" height="288"/>
+ </tileset>
  <layer id="1" name="Background" width="28" height="32">
   <data encoding="csv">
 64,96,97,127,68,407,81,82,83,84,441,442,443,444,407,407,407,81,82,83,84,441,442,443,444,407,407,407,
