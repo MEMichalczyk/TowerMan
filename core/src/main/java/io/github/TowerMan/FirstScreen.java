@@ -27,6 +27,8 @@ public class FirstScreen implements Screen {
         player.move();
         player.applyGravity(delta);
 
+        System.out.println(player);
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 
         batch.begin();

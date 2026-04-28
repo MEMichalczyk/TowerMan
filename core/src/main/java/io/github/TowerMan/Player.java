@@ -77,7 +77,7 @@ public class Player extends Sprite {
         super(texture);
         
         // Set initial position and size of the player
-        setPosition(0, 100);
+        setPosition(0, 0); //This will change with map.
         setSize(32, 32);
 
         // Initialize player-specific variables
@@ -90,7 +90,7 @@ public class Player extends Sprite {
     
     public void move() {
         // Implement player movement logic here, such as applying gravity and handling jumps
-        float speed = 100f; // Example horizontal speed
+        float speed = 120f; // Example horizontal speed
         float deltaTime = Gdx.graphics.getDeltaTime();
 
         // Move left with the left arrow key or A key
@@ -116,7 +116,7 @@ public class Player extends Sprite {
             velocityY = jumpVelocity;
             onGround = false;
 
-            //ADD JUMP SOUND LATER
+            // Play the jump sound effect
             playerJump .play(0.2f); // Adjust volume as needed
         }
 
@@ -130,10 +130,10 @@ public class Player extends Sprite {
             this.translateY(velocityY * deltaTime);
 
             //JUMP HOLD CHECK WILL PROBABLY GO HERE LATER ----------------------------------------------------
-
-
-            // Check if the player has landed on the ground (y <= 100 in this example)
-            if (this.getY() <= 0) {//WE WILL NEED TO CHANGE THIS ONCE I APPLY THE MAP FROM TILED! -------------------------------
+            
+            // Check if the player has landed on the ground. Replace with collision detection with the map later.
+            //I WILL NEED TO CHANGE THIS ONCE I APPLY THE MAP FROM TILED! -------------------------------
+            if (this.getY() <= 0) {
                 this.setY(0);
                 onGround = true;
                 velocityY = 0;
@@ -141,14 +141,15 @@ public class Player extends Sprite {
         }
     }
 
+    //toString method sends information to terminal.
     @Override
     public String toString() {
         return "Player{" +
-                "velocityY=" + velocityY +
-                ", gravity=" + gravity +
-                ", jumpVelocity=" + jumpVelocity +
-                ", onGround=" + onGround +
-                ", facingDirection=" + facingDirection +
+                "velocityY= " + velocityY +
+                ", gravity= " + gravity +
+                ", jumpVelocity= " + jumpVelocity +
+                ", onGround= " + onGround +
+                ", facingDirection= " + facingDirection +
                 '}';
     }
 }
