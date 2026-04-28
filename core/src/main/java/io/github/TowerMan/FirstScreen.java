@@ -3,11 +3,19 @@ package io.github.TowerMan;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
+
+    private TiledMap map;
+    private OrthogonalTiledMapRenderer mapRenderer;
+    private OrthographicCamera camera;
 
     private SpriteBatch batch;
     private Player player;
@@ -15,6 +23,15 @@ public class FirstScreen implements Screen {
 
     @Override
     public void show() {
+        // Load the Tiled map and set up the renderer and camera
+        map = new TmxMapLoader().load("TowerMan.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        camera = new OrthographicCamera();
+
+        // Set the camera to show map.
+        camera.setToOrtho(false, 224, 256);
+
+        // Initialize the player and its texture
         batch = new SpriteBatch();
         playerTexture = new Texture("Player.png");
         player = new Player(playerTexture);
@@ -32,6 +49,12 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 
         batch.begin();
+        // Render the map
+        camera.update();
+        mapRenderer.setView(camera);
+        mapRenderer.render();
+
+        // Render the player
         player.draw(batch);
         batch.end();
     }
