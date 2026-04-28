@@ -2,6 +2,7 @@ package io.github.TowerMan;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +25,8 @@ public class FirstScreen implements Screen {
     private Player player;
     private Texture playerTexture;
 
+    private Music backgroundMusic;
+
     @Override
     public void show() {
         // Load the Tiled map and set up the renderer and camera
@@ -41,6 +44,12 @@ public class FirstScreen implements Screen {
         batch = new SpriteBatch();
         playerTexture = new Texture("Player.png");
         player = new Player(playerTexture);
+
+        // Load and play background music
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BGM.mp3"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.3f); // Adjust volume as needed
+        backgroundMusic.play();
     }
 
     @Override
@@ -49,8 +58,6 @@ public class FirstScreen implements Screen {
 
         player.move();
         player.applyGravity(delta);
-
-        //System.out.println(player);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 

@@ -83,7 +83,7 @@ public class Player extends Sprite {
         // Initialize player-specific variables
         velocityY = 0f;
         gravity = -900f;
-        jumpVelocity = 250f;
+        jumpVelocity = 275f;
         onGround = true;
         playerJump = Gdx.audio.newSound(Gdx.files.internal("playerJump.mp3"));
     }
@@ -116,6 +116,7 @@ public class Player extends Sprite {
             velocityY = jumpVelocity;
             onGround = false;
 
+            
             // Play the jump sound effect
             playerJump .play(0.2f); // Adjust volume as needed
         }
