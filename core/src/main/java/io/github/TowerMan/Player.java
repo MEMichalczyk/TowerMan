@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class Player extends Sprite {
     // Player-specific variables
     private float velocityY;
+
+    // Hold the players previous Y
+    private float previousY;
     
     // Gravity and jump velocity can be adjusted as needed
     @SuppressWarnings("FieldMayBeFinal")
@@ -92,6 +95,8 @@ public class Player extends Sprite {
     
     public void move() {
         // Implement player movement logic here, such as applying gravity and handling jumps
+        previousY = getY();
+
         float speed = 120f; // Example horizontal speed
         float deltaTime = Gdx.graphics.getDeltaTime();
 
@@ -153,5 +158,13 @@ public class Player extends Sprite {
                 ", onGround= " + onGround +
                 ", facingDirection= " + facingDirection +
                 '}';
+    }
+
+    public float getPreviousY() {
+        return previousY;
+    }
+
+    public void setPreviousY(float previousY) {
+        this.previousY = previousY;
     }
 }

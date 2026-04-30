@@ -67,6 +67,7 @@ public class FirstScreen implements Screen {
         
         // Pull the Platforms layer from the Tiled Map
         MapObjects objects = map.getLayers().get("Platforms").getObjects();
+        System.out.println("Number of platform objects: " + objects.getCount());
 
         // Go through the objects and store them to the list
         for (MapObject object : objects) {
@@ -75,12 +76,18 @@ public class FirstScreen implements Screen {
                 platform.add(rect);
             }
         }
+        
+        for (Rectangle rect : platform) {
+            System.out.println("Platform: " + rect);
+        }
         //--------------------------------------------------------------
 
         // Initialize the player and its texture
         batch = new SpriteBatch();
         playerTexture = new Texture("Player.png");
         player = new Player(playerTexture);
+
+        System.out.println("Player starts at: X=" + player.getX() + ", Y=" + player.getY());
 
         //--------------------------------------------------------------
         // Load and play background music
@@ -120,25 +127,24 @@ public class FirstScreen implements Screen {
     }
 
     private void checkCollision() {
-        // Set player not on the ground
-        player.setOnGround(false);
+    player.setOnGround(false);
 
-        // Get the player hitbox
-        Rectangle playerBounds = player.getBoundingRectangle();
+    Rectangle playerBounds = player.getBoundingRectangle();
 
-        // Loop through the platforms to check if the player is touching one.
-        for (Rectangle rectangle : platform){
-            if (playerBounds.overlaps(rectangle)){
-                // Only able to land on a platform from above
-                if (player.getVelocityY() <= 0) {
-                    // Put the player ON the platform
-                    player.setY(rectangle.y + rectangle.height);
-                    player.setVelocityY(0);
-                    player.setOnGround(true);
-                }
-            }
+    for (Rectangle rectangle : platform) {
+        boolean falling = player.getVelocityY() <= 0;
+
+        boolean wasAbovePlatform =
+                player.getPreviousY() >= rectangle.y + rectangle.height;
+
+        if (falling && wasAbovePlatform && playerBounds.overlaps(rectangle)) {
+            player.setY(rectangle.y + rectangle.height);
+            player.setVelocityY(0);
+            player.setOnGround(true);
+            break;
         }
     }
+}
 
     @Override
     public void resize(int width, int height) {
