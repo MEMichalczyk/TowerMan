@@ -24,6 +24,7 @@ public class Player extends Sprite {
     private int facingDirection = 1;
 
     // Sound for player jump
+    @SuppressWarnings("FieldMayBeFinal")
     private Sound playerJump;
 
     // Getters and setters for player variables
@@ -77,14 +78,15 @@ public class Player extends Sprite {
         super(texture);
         
         // Set initial position and size of the player
-        setPosition(16, 16); //This will change with map.
-        setSize(48, 48); // Adjust size as needed
+        setPosition(2 * 16, 2 * 16); //This will change with map.
+        setSize(14, 16); // Adjust size as needed
 
         // Initialize player-specific variables
         velocityY = 0f;
         gravity = -900f;
         jumpVelocity = 275f;
         onGround = true;
+
         playerJump = Gdx.audio.newSound(Gdx.files.internal("playerJump.mp3"));
     }
     
@@ -120,7 +122,7 @@ public class Player extends Sprite {
             // Play the jump sound effect
             playerJump .play(0.2f); // Adjust volume as needed
         }
- 
+
         //Bounds? Check later ----------------------------------------------------
     }
 
@@ -132,10 +134,9 @@ public class Player extends Sprite {
 
             //JUMP HOLD CHECK WILL PROBABLY GO HERE LATER ----------------------------------------------------
             
-            // Check if the player has landed on the ground. Replace with collision detection with the map later.
-            //I WILL NEED TO CHANGE THIS ONCE I APPLY THE MAP FROM TILED! -------------------------------
-            if (this.getY() <= 16) {
-                this.setY(16);
+            // 0 is temp floor - Tiled collision should take over but this is failsafe
+            if (this.getY() <= 0) {
+                this.setY(0);
                 onGround = true;
                 velocityY = 0;
             }
