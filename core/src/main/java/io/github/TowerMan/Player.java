@@ -77,14 +77,16 @@ public class Player extends Sprite {
         super(texture);
         
         // Set initial position and size of the player
-        setPosition(16, 16); //This will change with map.
-        setSize(48, 48); // Adjust size as needed
+        setPosition(20, 20); //This will change with map.
+        setSize(46, 46); // Adjust size as needed
 
         // Initialize player-specific variables
         velocityY = 0f;
         gravity = -900f;
         jumpVelocity = 275f;
-        onGround = true;
+        onGround = false;
+
+        // Load the jump sound effect
         playerJump = Gdx.audio.newSound(Gdx.files.internal("playerJump.mp3"));
     }
     
@@ -134,11 +136,11 @@ public class Player extends Sprite {
             
             // Check if the player has landed on the ground. Replace with collision detection with the map later.
             //I WILL NEED TO CHANGE THIS ONCE I APPLY THE MAP FROM TILED! -------------------------------
-            if (this.getY() <= 16) {
-                this.setY(16);
-                onGround = true;
-                velocityY = 0;
-            }
+            //if (this.getY() <= 16) {
+                //this.setY(16);
+                //onGround = true;
+                //velocityY = 0;
+            //}
         }
     }
 
