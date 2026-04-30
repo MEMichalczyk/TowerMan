@@ -7,14 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** First screen of the application. Displayed after the application is created. */
@@ -32,32 +27,12 @@ public class FirstScreen implements Screen {
 
     private Music backgroundMusic;
 
-    private Array<Rectangle> platforms;
-
     @Override
     public void show() {
         // Load the Tiled map and set up the renderer and camera
         map = new TmxMapLoader().load("TowerMan.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1f / 8f); // Adjust unit scale as needed
         camera = new OrthographicCamera();
-
-                // Extract platform rectangles from the Tiled map's "Platforms" layer
-        platforms = new Array<>();
-
-        // Extract platform rectangles from the Tiled map's "Platforms" layer
-        MapObjects objects = map.getLayers().get("Platforms").getObjects();
-
-        // Loop through the objects in the "Platforms" layer and add their rectangles to the platforms array
-        for (MapObject object : objects) {
-            if (object instanceof RectangleMapObject rectangleMapObject) {
-                Rectangle rectangle = rectangleMapObject.getRectangle();
-                platforms.add(new Rectangle(
-                    rectangle.x / 8f, 
-                    rectangle.y / 8f, 
-                    rectangle.width / 8f, 
-                    rectangle.height / 8f)); // Adjust unit scale as needed
-            }
-        }
 
         //Add a viewport to maintain aspect ratio and handle resizing
         viewport = new FitViewport(28, 32, camera); // Adjust world size as needed
@@ -85,14 +60,6 @@ public class FirstScreen implements Screen {
         player.move();
         player.applyGravity(delta);
 
-        // Check for collisions with platforms and update player state accordingly
-        if (checkCollision()) {
-            player.setOnGround(true);
-            player.setVelocityY(0);
-        } else {
-            player.setOnGround(false);
-        } 
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 
         // Render the map
@@ -104,21 +71,6 @@ public class FirstScreen implements Screen {
         batch.begin();
         player.draw(batch);
         batch.end();
-    }
-    
-    // Check for collisions between the player and platforms
-    private boolean checkCollision() {
-        Rectangle playerRect = player.getBoundingRectangle();
-
-        for (Rectangle platform : platforms) {
-            if (playerRect.overlaps(platform)) {
-                if (player.getVelocityY() <= 0) { // Only consider collision if player is falling
-                    player.setPosition(player.getX(), platform.y + platform.height); // Place player on top of the platform
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
