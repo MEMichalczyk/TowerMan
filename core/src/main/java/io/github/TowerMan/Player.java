@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Player extends Sprite {
+    private boolean jumpRequest = false;
+
     private float velocityX;
 
     public float getVelocityX() {
@@ -130,13 +132,8 @@ public class Player extends Sprite {
         }
 
         // LOOK INTO GETTING A BETTER JUMP! HOLD TO JUMP HIGHER, ETC. ----------------------------------------------------
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && onGround) {
-            velocityY = jumpVelocity;
-            onGround = false;
-
-            
-            // Play the jump sound effect
-            playerJump .play(0.2f); // Adjust volume as needed
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            jumpRequest = true;
         }
 
         //Bounds? Check later ----------------------------------------------------
@@ -176,5 +173,17 @@ public class Player extends Sprite {
 
     public void setPreviousY(float previousY) {
         this.previousY = previousY;
+    }
+
+    public boolean isJumpRequested(){
+        return jumpRequest;
+    }
+
+    public void clearJumpRequest() {
+        jumpRequest = false;
+    }
+
+    public void playJumpSound() {
+        playerJump .play(0.2f);
     }
 }

@@ -104,11 +104,19 @@ public class FirstScreen implements Screen {
         player.move();
         player.applyGravity(delta);
 
+        //Collision and Jump
         player.setX(player.getX() + player.getVelocityX() * delta);
         collisionX();
         
         player.setY(player.getY() + player.getVelocityY() * delta);
         collisionY();
+
+        if (player.isOnGround() && player.isJumpRequested()) {
+            player.setVelocityY(player.getJumpVelocity());
+            player.setOnGround(false);
+            player.clearJumpRequest();
+            player.playJumpSound();
+        }
         
         camera.update();
         //--------------------------------------------------------------
