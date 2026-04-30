@@ -103,6 +103,12 @@ public class FirstScreen implements Screen {
         // Update player position and apply gravity
         player.move();
         player.applyGravity(delta);
+
+        player.setX(player.getX() + player.getVelocityX() * delta);
+        collisionX();
+        
+        player.setY(player.getY() + player.getVelocityY() * delta);
+        collisionY();
         
         camera.update();
         //--------------------------------------------------------------
@@ -124,6 +130,49 @@ public class FirstScreen implements Screen {
         batch.end();
     }
 
+    private void collisionX(){
+        Rectangle bounds = player.getBoundingRectangle();
+
+        for (Rectangle rect : platform){
+            if (bounds.overlaps(rect)){
+                if (player.getVelocityX() > 0){
+                    player.setX(rect.x - player.getWidth());
+                }
+
+                if (player.getVelocityX() < 0) {
+                    player.setX(rect.x + rect.width);
+                }
+
+                player.setVelocityX(0);
+
+                bounds = player.getBoundingRectangle();
+            }
+        }
+    }
+
+    private void collisionY(){
+        Rectangle bounds = player.getBoundingRectangle();
+
+        player.setOnGround(false);
+
+        for (Rectangle rect : platform){
+            if (bounds.overlaps(rect)){
+                if (player.getVelocityY() <= 0){
+                    player.setY(rect.y + rect.height);
+                    player.setVelocityY(0);
+                    player.setOnGround(true);
+                }
+
+                if (player.getVelocityY() > 0) {
+                    player.setY(rect.y - player.getHeight());
+                    player.setVelocityY(0);
+                }
+
+                bounds = player.getBoundingRectangle();
+
+            }
+        }
+    }
 
     @Override
     public void resize(int width, int height) {

@@ -109,9 +109,12 @@ public class Player extends Sprite {
 
         float speed = 120f; // Example horizontal speed
 
+        velocityX = 0;
+
         // Move left with the left arrow key or A key
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
             velocityX = -speed;
+
             // Flip the sprite to face left
             setFlip(true, false);
             facingDirection = -1;
@@ -136,11 +139,6 @@ public class Player extends Sprite {
             playerJump .play(0.2f); // Adjust volume as needed
         }
 
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        this.translateX(velocityX * deltaTime);
-
-        velocityX = 0;
-
         //Bounds? Check later ----------------------------------------------------
     }
 
@@ -148,7 +146,6 @@ public class Player extends Sprite {
     public void applyGravity(float deltaTime) {
         if (!onGround) {
             velocityY += gravity * deltaTime;
-            this.translateY(velocityY * deltaTime);
 
             //JUMP HOLD CHECK WILL PROBABLY GO HERE LATER ----------------------------------------------------
             
