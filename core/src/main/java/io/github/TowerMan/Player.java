@@ -7,6 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Player extends Sprite {
+    private float velocityX;
+
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+
     // Player-specific variables
     private float velocityY;
 
@@ -98,23 +108,21 @@ public class Player extends Sprite {
         previousY = getY();
 
         float speed = 120f; // Example horizontal speed
-        float deltaTime = Gdx.graphics.getDeltaTime();
 
         // Move left with the left arrow key or A key
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-            this.translateX(-speed * deltaTime);
-
+            velocityX = -speed;
             // Flip the sprite to face left
-            this.setFlip(true, false);
+            setFlip(true, false);
             facingDirection = -1;
         }
 
         // Move right with the right arrow key or D key
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-            this.translateX(speed * deltaTime);
+            velocityX = speed;
 
             // Flip the sprite to face right
-            this.setFlip(false, false);
+            setFlip(false, false);
             facingDirection = 1;
         }
 
@@ -127,6 +135,11 @@ public class Player extends Sprite {
             // Play the jump sound effect
             playerJump .play(0.2f); // Adjust volume as needed
         }
+
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        this.translateX(velocityX * deltaTime);
+
+        velocityX = 0;
 
         //Bounds? Check later ----------------------------------------------------
     }

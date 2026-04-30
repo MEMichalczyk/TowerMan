@@ -103,8 +103,6 @@ public class FirstScreen implements Screen {
         // Update player position and apply gravity
         player.move();
         player.applyGravity(delta);
-
-        checkCollision();
         
         camera.update();
         //--------------------------------------------------------------
@@ -126,25 +124,6 @@ public class FirstScreen implements Screen {
         batch.end();
     }
 
-    private void checkCollision() {
-    player.setOnGround(false);
-
-    Rectangle playerBounds = player.getBoundingRectangle();
-
-    for (Rectangle rectangle : platform) {
-        boolean falling = player.getVelocityY() <= 0;
-
-        boolean wasAbovePlatform =
-                player.getPreviousY() >= rectangle.y + rectangle.height;
-
-        if (falling && wasAbovePlatform && playerBounds.overlaps(rectangle)) {
-            player.setY(rectangle.y + rectangle.height);
-            player.setVelocityY(0);
-            player.setOnGround(true);
-            break;
-        }
-    }
-}
 
     @Override
     public void resize(int width, int height) {
