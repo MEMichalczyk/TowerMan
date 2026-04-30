@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -17,8 +20,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
 
+    @SuppressWarnings("FieldMayBeFinal")
     private float WORLD_WIDTH = 320;
+    @SuppressWarnings("FieldMayBeFinal")
     private float WORLD_HEIGHT = 384;
+    @SuppressWarnings("FieldMayBeFinal")
     private int SCALE = 2;
 
     private TiledMap map;
@@ -37,6 +43,7 @@ public class FirstScreen implements Screen {
 
     private Array<Rectangle> platform;
 
+    //------------------------------------------------------------------
     @Override
     public void show() {
         // Camera and Viewport
@@ -49,16 +56,33 @@ public class FirstScreen implements Screen {
         
         Gdx.graphics.setWindowedMode(320 * SCALE , 384 * SCALE); // Set the window size. Adjust as needed.
 
+        //--------------------------------------------------------------
         // Map
         map = new TmxMapLoader().load("TowerMan3.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1f); // Adjust unit scale as needed
 
+        //--------------------------------------------------------------
+        // The Array of platforms.
+        platform = new Array<>();
+        
+        // Pull the Platforms layer from the Tiled Map
+        MapObjects objects = map.getLayers().get("Platforms").getObjects();
+
+        // Go through the objects and store them to the list
+        for (MapObject object : objects) {
+            if (object instanceof RectangleMapObject r) {
+                Rectangle rect = r.getRectangle();
+                platform.add(rect);
+            }
+        }
+        //--------------------------------------------------------------
 
         // Initialize the player and its texture
         batch = new SpriteBatch();
         playerTexture = new Texture("Player.png");
         player = new Player(playerTexture);
 
+        //--------------------------------------------------------------
         // Load and play background music
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BGM.mp3"));
         backgroundMusic.setLooping(true);
@@ -66,28 +90,54 @@ public class FirstScreen implements Screen {
         backgroundMusic.play();
     }
 
+    //------------------------------------------------------------------
     @Override
     public void render(float delta) {
-        // Wipe the screen so that we don't see anything from a previous frame.
-
         // Update player position and apply gravity
         player.move();
         player.applyGravity(delta);
 
+        checkCollision();
+        
         camera.update();
+        //--------------------------------------------------------------
+        // Wipe the screen so that we don't see anything from a previous frame.
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
 
+        //--------------------------------------------------------------
         // Render the map
         mapRenderer.setView(camera);
         mapRenderer.render();
 
+        //--------------------------------------------------------------
         // Render the player
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
         player.draw(batch);
         batch.end();
+    }
+
+    private void checkCollision() {
+        // Set player not on the ground
+        player.setOnGround(false);
+
+        // Get the player hitbox
+        Rectangle playerBounds = player.getBoundingRectangle();
+
+        // Loop through the platforms to check if the player is touching one.
+        for (Rectangle rectangle : platform){
+            if (playerBounds.overlaps(rectangle)){
+                // Only able to land on a platform from above
+                if (player.getVelocityY() <= 0) {
+                    // Put the player ON the platform
+                    player.setY(rectangle.y + rectangle.height);
+                    player.setVelocityY(0);
+                    player.setOnGround(true);
+                }
+            }
+        }
     }
 
     @Override
