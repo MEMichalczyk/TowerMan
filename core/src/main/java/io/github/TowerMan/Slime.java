@@ -4,7 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Slime extends Sprite{
+    @SuppressWarnings("FieldMayBeFinal")
     private float velocityX;
+
+    @SuppressWarnings("FieldMayBeFinal")
     private float velocityY;
 
     @SuppressWarnings("FieldMayBeFinal")
