@@ -1,6 +1,7 @@
 package io.github.TowerMan;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -225,8 +226,10 @@ public class FirstScreen implements Screen {
 
         for (Rectangle rect : ladder) {
             if (bounds.overlaps(rect)){
-            player.setOnLadder(true);
-            break;
+                if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)){
+                    player.setOnLadder(true);
+                    break;
+                }
             }
         }
     }

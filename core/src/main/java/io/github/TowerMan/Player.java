@@ -158,7 +158,7 @@ public class Player extends Sprite {
         //------------------------------------------------------------------
         // Ladder Movement
         if (onLadder){
-            velocityY = 0; // So we don't fall
+            velocityY = 0f; // So we don't fall
             
             if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
                 velocityY = 80f;
@@ -167,6 +167,7 @@ public class Player extends Sprite {
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
                 velocityY = -80f;
             }
+
         }
     }
 
