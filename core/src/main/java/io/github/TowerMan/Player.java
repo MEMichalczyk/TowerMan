@@ -33,6 +33,7 @@ public class Player extends Sprite {
     // Sound for player jump
     @SuppressWarnings("FieldMayBeFinal")
     private Sound playerJump;
+    private Sound playerDeath;
 
     // Getters and setters for player variables
     public float getVelocityX() {
@@ -99,11 +100,12 @@ public class Player extends Sprite {
 
         // Initialize player-specific variables
         velocityY = 0f;
-        gravity = -900f;
-        jumpVelocity = 275f;
+        gravity = -700f;
+        jumpVelocity = 175f;
         onGround = false;
 
         playerJump = Gdx.audio.newSound(Gdx.files.internal("playerJump.mp3"));
+        playerDeath = Gdx.audio.newSound(Gdx.files.internal("deathSound.mp3"));
     }
     
     //------------------------------------------------------------------
@@ -111,7 +113,7 @@ public class Player extends Sprite {
         // Implement player movement logic here, such as applying gravity and handling jumps
         previousY = getY();
 
-        float speed = 120f; // Example horizontal speed
+        float speed = 100f; // Example horizontal speed
 
         velocityX = 0;
 
@@ -182,6 +184,10 @@ public class Player extends Sprite {
     }
 
     public void playJumpSound() {
-        playerJump .play(0.2f);
+        playerJump.play(0.2f);
+    }
+
+    public void playDeathSound() {
+        playerDeath.play(0.2f);
     }
 }

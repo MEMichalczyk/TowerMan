@@ -43,6 +43,7 @@ public class FirstScreen implements Screen {
 
     private Array<Rectangle> platform;
     private Array<Rectangle> ladder;
+    private Array<Rectangle> spike;
 
     //------------------------------------------------------------------
     @Override
@@ -85,9 +86,15 @@ public class FirstScreen implements Screen {
             System.out.println("Platform: " + rect);
         }
         */
+    
         //--------------------------------------------------------------
         // The Array of Ladders
         ladder = loadRectangles("Ladders");
+        //--------------------------------------------------------------
+
+        //--------------------------------------------------------------
+        // The Array of Spikes
+        spike = loadRectangles("Spikes");
         //--------------------------------------------------------------
 
         // Initialize the player and its texture
@@ -119,6 +126,8 @@ public class FirstScreen implements Screen {
         
         player.setY(player.getY() + player.getVelocityY() * delta);
         collisionY();
+
+        checkSpikes();
 
         if (player.isOnGround() && player.isJumpRequested()) {
             player.setVelocityY(player.getJumpVelocity());
@@ -195,13 +204,34 @@ public class FirstScreen implements Screen {
         }
     }
 
+    private void checkSpikes(){
+        Rectangle bounds = player.getBoundingRectangle();
+
+        for (Rectangle rect : spike) {
+            if (bounds.overlaps(rect)){
+            resetPlayer();
+            player.playDeathSound();
+            break;
+            }
+        }
+    }
+
+    private void resetPlayer() {
+        player.setPosition(2 * 16, 2 * 16);
+        player.setVelocityX(0);
+        player.setVelocityY(0);
+        player.setOnGround(false);
+    }
+
+    //------------------------------------------------------------------
+    // Method for getting rectangle objects from map!
     private Array<Rectangle> loadRectangles(String layerName) {
         Array<Rectangle> rectangles = new Array<>();
 
         MapObjects objects = map.getLayers().get(layerName).getObjects();
         
         //Shows objects
-        System.out.println("Number of objects: " + layerName + objects.getCount());
+        System.out.println("Number of objects: " + layerName + " " + objects.getCount());
 
         // Go through the objects and store them to the list
         for (MapObject object : objects) {
@@ -218,6 +248,7 @@ public class FirstScreen implements Screen {
 
         return rectangles;
     }
+
     //------------------------------------------------------------------
     @Override
     public void resize(int width, int height) {
