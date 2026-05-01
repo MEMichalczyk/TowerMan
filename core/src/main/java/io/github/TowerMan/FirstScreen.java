@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -46,6 +47,9 @@ public class FirstScreen implements Screen {
     private Array<Rectangle> ladder;
     private Array<Rectangle> spike;
 
+    private int deaths = 0;
+    private BitmapFont font;
+
     //------------------------------------------------------------------
     @Override
     public void show() {
@@ -59,6 +63,7 @@ public class FirstScreen implements Screen {
         
         Gdx.graphics.setWindowedMode(320 * SCALE , 384 * SCALE); // Set the window size. Adjust as needed.
 
+        font = new BitmapFont();
         //--------------------------------------------------------------
         // Map
         map = new TmxMapLoader().load("TowerMan3.tmx");
@@ -155,6 +160,7 @@ public class FirstScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
+        font.draw(batch, "Deaths: " + deaths, 3, 14);
         player.draw(batch);
         batch.end();
     }
@@ -240,6 +246,7 @@ public class FirstScreen implements Screen {
         player.setVelocityX(0);
         player.setVelocityY(0);
         player.setOnGround(false);
+        deaths++;
     }
 
     //------------------------------------------------------------------
