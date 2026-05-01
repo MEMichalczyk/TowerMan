@@ -7,14 +7,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Player extends Sprite {
+
+    //Requesting a jump
     private boolean jumpRequest = false;
 
+    // Player-specific variables
     private float velocityX;
 
-    // Player-specific variables
+    private float speed;
+
     private float velocityY;
 
-    // Hold the players previous Y
+    // Hold the players previous Y - checking for platforms
     private float previousY;
     
     // Gravity and jump velocity can be adjusted as needed
@@ -27,15 +31,24 @@ public class Player extends Sprite {
     // Flag to check if the player is on the ground
     private boolean onGround;
 
+    // Flag to check if player is on a ladder
+    private boolean onLadder = false;
+
     // 1 for right, -1 for left facing direction
     private int facingDirection = 1;
 
     // Sound for player jump
     @SuppressWarnings("FieldMayBeFinal")
     private Sound playerJump;
+
+    @SuppressWarnings("FieldMayBeFinal")
     private Sound playerDeath;
 
     // Getters and setters for player variables
+    public boolean isOnLadder(){
+        return onLadder;
+    }
+
     public float getVelocityX() {
         return velocityX;
     }
@@ -96,7 +109,7 @@ public class Player extends Sprite {
         
         // Set initial position and size of the player
         setPosition(2 * 16, 2 * 16); //This will change with map.
-        setSize(14, 16); // Adjust size as needed
+        setSize(18, 20); // Adjust size as needed
 
         // Initialize player-specific variables
         velocityY = 0f;
@@ -113,7 +126,7 @@ public class Player extends Sprite {
         // Implement player movement logic here, such as applying gravity and handling jumps
         previousY = getY();
 
-        float speed = 100f; // Example horizontal speed
+        speed = 100f; // Example horizontal speed
 
         velocityX = 0;
 
@@ -138,10 +151,28 @@ public class Player extends Sprite {
 
         //------------------------------------------------------------------
         // LOOK INTO GETTING A BETTER JUMP! HOLD TO JUMP HIGHER, ETC. ----------------------------------------------------
-        
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             jumpRequest = true;
         }
+
+        //------------------------------------------------------------------
+        // Ladder Movement
+        if (onLadder){
+            velocityY = 0; // So we don't fall
+            
+            if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
+                velocityY = 80f;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
+                velocityY = -80f;
+            }
+        }
+    }
+
+    // For player being on a ladder set to onLadder
+    public void setOnLadder(boolean onLadder) {
+        this.onLadder = onLadder;
     }
 
     //------------------------------------------------------------------

@@ -127,6 +127,8 @@ public class FirstScreen implements Screen {
         player.setY(player.getY() + player.getVelocityY() * delta);
         collisionY();
 
+        checkLadder();
+
         checkSpikes();
 
         if (player.isOnGround() && player.isJumpRequested()) {
@@ -203,7 +205,7 @@ public class FirstScreen implements Screen {
             }
         }
     }
-
+    // Check if the player is on spikes
     private void checkSpikes(){
         Rectangle bounds = player.getBoundingRectangle();
 
@@ -216,6 +218,20 @@ public class FirstScreen implements Screen {
         }
     }
 
+    private void checkLadder(){
+        Rectangle bounds = player.getBoundingRectangle();
+
+        player.setOnLadder(false);
+
+        for (Rectangle rect : ladder) {
+            if (bounds.overlaps(rect)){
+            player.setOnLadder(true);
+            break;
+            }
+        }
+    }
+
+    // Reset the player to the start of the level
     private void resetPlayer() {
         player.setPosition(2 * 16, 2 * 16);
         player.setVelocityX(0);
