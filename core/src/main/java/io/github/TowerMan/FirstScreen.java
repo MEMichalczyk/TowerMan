@@ -42,6 +42,7 @@ public class FirstScreen implements Screen {
     private Music backgroundMusic;
 
     private Array<Rectangle> platform;
+    private Array<Rectangle> ladder;
 
     //------------------------------------------------------------------
     @Override
@@ -63,6 +64,9 @@ public class FirstScreen implements Screen {
 
         //--------------------------------------------------------------
         // The Array of platforms.
+        platform = loadRectangles("Platforms");
+        
+        /* OG turned into a method for all rectangles (HOPEFULLY....)
         platform = new Array<>();
         
         // Pull the Platforms layer from the Tiled Map
@@ -80,6 +84,10 @@ public class FirstScreen implements Screen {
         for (Rectangle rect : platform) {
             System.out.println("Platform: " + rect);
         }
+        */
+        //--------------------------------------------------------------
+        // The Array of Ladders
+        ladder = loadRectangles("Ladders");
         //--------------------------------------------------------------
 
         // Initialize the player and its texture
@@ -98,6 +106,7 @@ public class FirstScreen implements Screen {
     }
 
     //------------------------------------------------------------------
+    //RENDER
     @Override
     public void render(float delta) {
         // Update player position and apply gravity
@@ -138,6 +147,8 @@ public class FirstScreen implements Screen {
         batch.end();
     }
 
+    //------------------------------------------------------------------
+    // Stops horizontal movement on platforms
     private void collisionX(){
         Rectangle bounds = player.getBoundingRectangle();
 
@@ -158,6 +169,8 @@ public class FirstScreen implements Screen {
         }
     }
 
+    //------------------------------------------------------------------
+    // Stops vertical movement on platforms.
     private void collisionY(){
         Rectangle bounds = player.getBoundingRectangle();
 
@@ -182,6 +195,30 @@ public class FirstScreen implements Screen {
         }
     }
 
+    private Array<Rectangle> loadRectangles(String layerName) {
+        Array<Rectangle> rectangles = new Array<>();
+
+        MapObjects objects = map.getLayers().get(layerName).getObjects();
+        
+        //Shows objects
+        System.out.println("Number of objects: " + layerName + objects.getCount());
+
+        // Go through the objects and store them to the list
+        for (MapObject object : objects) {
+            if (object instanceof RectangleMapObject r) {
+                Rectangle rect = r.getRectangle();
+                rectangles.add(rect);
+            }
+        }
+        
+        //Check for platform data
+        for (Rectangle rect : rectangles) {
+            System.out.println("Platform: " + rect);
+        }
+
+        return rectangles;
+    }
+    //------------------------------------------------------------------
     @Override
     public void resize(int width, int height) {
         if(width <= 0 || height <= 0) return;

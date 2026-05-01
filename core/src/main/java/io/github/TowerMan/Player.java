@@ -11,14 +11,6 @@ public class Player extends Sprite {
 
     private float velocityX;
 
-    public float getVelocityX() {
-        return velocityX;
-    }
-
-    public void setVelocityX(float velocityX) {
-        this.velocityX = velocityX;
-    }
-
     // Player-specific variables
     private float velocityY;
 
@@ -43,6 +35,14 @@ public class Player extends Sprite {
     private Sound playerJump;
 
     // Getters and setters for player variables
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+
     public float getVelocityY() {
         return velocityY;
     }
@@ -87,6 +87,7 @@ public class Player extends Sprite {
         this.facingDirection = facingDirection;
     }
 
+    //------------------------------------------------------------------
     // Constructor to initialize the player with a texture and set initial position and size
     public Player(Texture texture) {
         // Call the Sprite constructor to initialize the sprite with the given texture
@@ -100,11 +101,12 @@ public class Player extends Sprite {
         velocityY = 0f;
         gravity = -900f;
         jumpVelocity = 275f;
-        onGround = true;
+        onGround = false;
 
         playerJump = Gdx.audio.newSound(Gdx.files.internal("playerJump.mp3"));
     }
     
+    //------------------------------------------------------------------
     public void move() {
         // Implement player movement logic here, such as applying gravity and handling jumps
         previousY = getY();
@@ -122,6 +124,7 @@ public class Player extends Sprite {
             facingDirection = -1;
         }
 
+        //------------------------------------------------------------------
         // Move right with the right arrow key or D key
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             velocityX = speed;
@@ -131,30 +134,23 @@ public class Player extends Sprite {
             facingDirection = 1;
         }
 
+        //------------------------------------------------------------------
         // LOOK INTO GETTING A BETTER JUMP! HOLD TO JUMP HIGHER, ETC. ----------------------------------------------------
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             jumpRequest = true;
         }
-
-        //Bounds? Check later ----------------------------------------------------
     }
 
+    //------------------------------------------------------------------
     // Gravity
     public void applyGravity(float deltaTime) {
         if (!onGround) {
             velocityY += gravity * deltaTime;
-
-            //JUMP HOLD CHECK WILL PROBABLY GO HERE LATER ----------------------------------------------------
-            
-            // 0 is temp floor - Tiled collision should take over but this is failsafe
-            if (this.getY() <= 0) {
-                this.setY(0);
-                onGround = true;
-                velocityY = 0;
-            }
         }
     }
 
+    //------------------------------------------------------------------
     //toString method sends information to terminal.
     @Override
     public String toString() {
@@ -167,6 +163,8 @@ public class Player extends Sprite {
                 '}';
     }
 
+    //------------------------------------------------------------------
+    // Getters/Setters
     public float getPreviousY() {
         return previousY;
     }
