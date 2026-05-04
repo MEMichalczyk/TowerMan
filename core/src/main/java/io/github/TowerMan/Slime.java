@@ -35,7 +35,7 @@ public class Slime extends Sprite{
 
         direction = -1;
 
-        velocityX = speed * direction;
+        velocityX = speed * direction;  
         velocityY = 0;
     }
 

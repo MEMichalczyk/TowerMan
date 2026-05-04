@@ -1,11 +1,14 @@
 package io.github.TowerMan;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class Key extends Sprite {
+
+public class Key extends Collectible {
+    public Key(Texture texture, float x, float y) {
+        super(texture, x, y, "keyCollect.mp3");
+    }
+}
+/*public class Key extends Sprite {
     @SuppressWarnings("FieldMayBeFinal")
     private boolean collected = false;
 
@@ -28,3 +31,4 @@ public class Key extends Sprite {
         keyCollect.play(0.5f);
     }
 }
+*/

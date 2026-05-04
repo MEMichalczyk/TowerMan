@@ -101,6 +101,7 @@ public class FirstScreen implements Screen {
         win = loadRectangles("Win");
         //--------------------------------------------------------------
 
+        // Initialize deaths and keys collected to 0
         deaths = 0;
         keysCollected = 0;
         
