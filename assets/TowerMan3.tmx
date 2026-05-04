@@ -142,7 +142,7 @@
    <property name="type" value="win"/>
   </properties>
   <object id="2" x="29.7576" y="29.7878" width="7.4091" height="17.2122"/>
-  <object id="47" x="17.3333" y="350.333" width="11.6667" height="15"/>
+  <object id="47" x="12.5724" y="315.942" width="2.88409" height="14"/>
  </objectgroup>
  <objectgroup id="5" name="Platforms">
   <properties>

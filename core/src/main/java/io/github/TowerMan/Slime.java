@@ -26,7 +26,11 @@ public class Slime extends Sprite{
         setPosition(posX, posY);
         setSize(16, 16);
 
-        speed = 30f;
+        //speed = 30f;
+
+        // Randomly assign a speed of either 30 or 40 to the slime
+        speed = Math.random() < 0.5 ? 30f : 40f;
+        
         gravity = -700f;
 
         direction = -1;

@@ -48,8 +48,8 @@ public class FirstScreen implements Screen {
     private Array<Rectangle> spike;
     private Array<Rectangle> win;
 
-    private int deaths = 0;
-    private BitmapFont deathFont;
+    private int deaths;
+    private BitmapFont font;
     private BitmapFont winFont;
 
     private Array<Slime> slimes;
@@ -72,7 +72,7 @@ public class FirstScreen implements Screen {
         
         Gdx.graphics.setWindowedMode(320 * SCALE , 384 * SCALE); // Set the window size. Adjust as needed.
 
-        deathFont = new BitmapFont();
+        font = new BitmapFont();
 
         winFont = new BitmapFont();
         winFont.getData().setScale(2); // Make the win message larger. Adjust as needed.
@@ -97,6 +97,8 @@ public class FirstScreen implements Screen {
         win = loadRectangles("Win");
         //--------------------------------------------------------------
 
+        deaths = 0;
+        
         // Initialize the player and its texture
         batch = new SpriteBatch();
         playerTexture = new Texture("Player.png");
@@ -178,7 +180,7 @@ public class FirstScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        deathFont.draw(batch, "Deaths: " + deaths, 7, 14);
+        font.draw(batch, "Deaths: " + deaths, 7, 14);
         player.draw(batch);
 
         // Render all slimes in the array
@@ -188,10 +190,12 @@ public class FirstScreen implements Screen {
 
         // If the player has won, display a win message
         if (hasWon) {
+            backgroundMusic.stop();
             winFont.draw(batch, "YOU WIN!", 90, 220);
-            deathFont.draw(batch, "ESC TO EXIT", 115, 190);
+            font.draw(batch, "ESC TO EXIT", 115, 190);
         }
 
+        // Allow the player to exit the game by pressing the ESCAPE key.
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
@@ -433,7 +437,7 @@ public class FirstScreen implements Screen {
         mapRenderer.dispose();
         backgroundMusic.dispose();
         slimeTexture.dispose();
-        deathFont.dispose();
+        font.dispose();
         winFont.dispose();
         winSound.dispose();
     }
