@@ -22,9 +22,9 @@ public class Slime extends Sprite{
     public Slime(Texture texture, float posX, float posY) {
         super(texture);
         setPosition(posX, posY);
-        setSize(14, 16);
+        setSize(16, 16);
 
-        speed = 75f;
+        speed = 35f;
         gravity = -700f;
 
         direction = -1;
@@ -33,8 +33,34 @@ public class Slime extends Sprite{
         velocityY = 0;
     }
 
+    public void move(float deltaTime) {
+        setX(getX() + velocityX * deltaTime);
+    }
+
     public void applyGravity(float deltaTime) {
         velocityY += gravity * deltaTime;
         setY(getY() + velocityY * deltaTime);
+    }
+
+    public void reverseDirection() {
+        direction *= -1;
+        velocityX = speed * direction;
+        setFlip(true, false);
+    }   
+
+    public float getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public float getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
     }
 }

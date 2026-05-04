@@ -50,6 +50,9 @@ public class FirstScreen implements Screen {
     private int deaths = 0;
     private BitmapFont font;
 
+    private Slime slimes;
+    private Texture slimeTexture;
+
     //------------------------------------------------------------------
     @Override
     public void show() {
@@ -108,6 +111,10 @@ public class FirstScreen implements Screen {
         playerTexture = new Texture("Player.png");
         player = new Player(playerTexture);
 
+        // Initialize the slime and its texture
+        slimeTexture = new Texture("Slime.png");
+        slimes = new Slime(slimeTexture, 200, 100);
+
         System.out.println("Player starts at: X=" + player.getX() + ", Y=" + player.getY());
 
         //--------------------------------------------------------------
@@ -126,6 +133,11 @@ public class FirstScreen implements Screen {
         player.move();
         player.applyGravity(delta);
 
+        slimes.move(delta);
+        slimeCollisionX();
+        slimes.applyGravity(delta);
+        slimeCollisionY();
+
         //Collision and Jump
         player.setX(player.getX() + player.getVelocityX() * delta);
         collisionX();
@@ -143,7 +155,7 @@ public class FirstScreen implements Screen {
             player.clearJumpRequest();
             player.playJumpSound();
         }
-        
+
         camera.update();
         //--------------------------------------------------------------
         // Wipe the screen so that we don't see anything from a previous frame.
@@ -156,12 +168,13 @@ public class FirstScreen implements Screen {
         mapRenderer.render();
 
         //--------------------------------------------------------------
-        // Render the player
+        // Render the player and slimes
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
         font.draw(batch, "Deaths: " + deaths, 3, 14);
         player.draw(batch);
+        slimes.draw(batch);
         batch.end();
     }
 
@@ -183,6 +196,26 @@ public class FirstScreen implements Screen {
                 player.setVelocityX(0);
 
                 bounds = player.getBoundingRectangle();
+            }
+        }
+    }
+
+    private void slimeCollisionX(){
+        Rectangle bounds = slimes.getBoundingRectangle();
+
+        for (Rectangle rect : platform){
+            if (bounds.overlaps(rect)){
+                if (slimes.getVelocityX() > 0){
+                    slimes.setX(rect.x - slimes.getWidth());
+                }
+
+                if (slimes.getVelocityX() < 0) {
+                    slimes.setX(rect.x + rect.width);
+                }
+
+                slimes.setVelocityX(0);
+
+                bounds = slimes.getBoundingRectangle();
             }
         }
     }
@@ -212,6 +245,28 @@ public class FirstScreen implements Screen {
             }
         }
     }
+
+    private void slimeCollisionY(){
+        Rectangle bounds = slimes.getBoundingRectangle();
+
+        for (Rectangle rect : platform){
+            if (bounds.overlaps(rect)){
+                if (slimes.getVelocityY() <= 0){
+                    slimes.setY(rect.y + rect.height);
+                    slimes.setVelocityY(0);
+                }
+
+                if (slimes.getVelocityY() > 0) {
+                    slimes.setY(rect.y - slimes.getHeight());
+                    slimes.setVelocityY(0);
+                }
+
+                bounds = slimes.getBoundingRectangle();
+
+            }
+        }
+    }
+
     // Check if the player is on spikes
     private void checkSpikes(){
         Rectangle bounds = player.getBoundingRectangle();
