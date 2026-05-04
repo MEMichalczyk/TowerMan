@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
-
     @SuppressWarnings("FieldMayBeFinal")
     private float WORLD_WIDTH = 320;
     @SuppressWarnings("FieldMayBeFinal")
@@ -46,14 +46,20 @@ public class FirstScreen implements Screen {
     private Array<Rectangle> platform;
     private Array<Rectangle> ladder;
     private Array<Rectangle> spike;
+    private Array<Rectangle> win;
 
     private int deaths = 0;
-    private BitmapFont font;
+    private BitmapFont deathFont;
+    private BitmapFont winFont;
 
     private Array<Slime> slimes;
     private Texture slimeTexture;
 
-    //------------------------------------------------------------------
+    private boolean hasWon = false;
+    private Sound winSound;
+
+    //-----------------------------------------------------------------------------------------------------------------
+    //SHOW
     @Override
     public void show() {
         // Camera and Viewport
@@ -66,8 +72,13 @@ public class FirstScreen implements Screen {
         
         Gdx.graphics.setWindowedMode(320 * SCALE , 384 * SCALE); // Set the window size. Adjust as needed.
 
-        font = new BitmapFont();
-        //--------------------------------------------------------------
+        deathFont = new BitmapFont();
+
+        winFont = new BitmapFont();
+        winFont.getData().setScale(2); // Make the win message larger. Adjust as needed.
+        winFont.setColor(1, 1, 0, 1); // Set the win message color to yellow. Adjust as needed.
+
+
         // Map
         map = new TmxMapLoader().load("TowerMan3.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1f); // Adjust unit scale as needed
@@ -76,34 +87,14 @@ public class FirstScreen implements Screen {
         // The Array of platforms.
         platform = loadRectangles("Platforms");
         
-        /* OG turned into a method for all rectangles (HOPEFULLY....)
-        platform = new Array<>();
-        
-        // Pull the Platforms layer from the Tiled Map
-        MapObjects objects = map.getLayers().get("Platforms").getObjects();
-        System.out.println("Number of platform objects: " + objects.getCount());
-
-        // Go through the objects and store them to the list
-        for (MapObject object : objects) {
-            if (object instanceof RectangleMapObject r) {
-                Rectangle rect = r.getRectangle();
-                platform.add(rect);
-            }
-        }
-        
-        for (Rectangle rect : platform) {
-            System.out.println("Platform: " + rect);
-        }
-        */
-    
-        //--------------------------------------------------------------
         // The Array of Ladders
         ladder = loadRectangles("Ladders");
-        //--------------------------------------------------------------
 
-        //--------------------------------------------------------------
         // The Array of Spikes
         spike = loadRectangles("Spikes");
+
+        // The Array of Win zones
+        win = loadRectangles("Win");
         //--------------------------------------------------------------
 
         // Initialize the player and its texture
@@ -111,8 +102,10 @@ public class FirstScreen implements Screen {
         playerTexture = new Texture("Player.png");
         player = new Player(playerTexture);
 
-        // Initialize the slime and its texture
+        // Initialize the slimes and its textures
         slimeTexture = new Texture("Slime.png");
+        
+        // Create and add slimes to the array. Adjust positions as needed. Organized right now bottom to top.
         slimes = new Array<>();
         slimes.add(new Slime(slimeTexture, 220, 79));
         slimes.add(new Slime(slimeTexture, 100, 97));
@@ -120,17 +113,16 @@ public class FirstScreen implements Screen {
         slimes.add(new Slime(slimeTexture, 195, 287));
         slimes.add(new Slime(slimeTexture, 70, 337));
 
-        System.out.println("Player starts at: X=" + player.getX() + ", Y=" + player.getY());
-
         //--------------------------------------------------------------
         // Load and play background music
+        winSound = Gdx.audio.newSound(Gdx.files.internal("win.mp3"));
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("BGM.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.3f); // Adjust volume as needed
         backgroundMusic.play();
     }
 
-    //------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
     //RENDER
     @Override
     public void render(float delta) {
@@ -139,35 +131,39 @@ public class FirstScreen implements Screen {
         player.applyGravity(delta);
 
         // Update slime positions and apply gravity
-        for (Slime slime : slimes){
-        slime.move(delta);
-        slimeCollisionX(slime);
-        checkSlimeLedge(slime);
-        slime.applyGravity(delta);
-        slimeCollisionY(slime);
+        if(!hasWon) { // Only update if player hasn't won yet
+            for (Slime slime : slimes){
+                slime.move(delta);
+                slimeCollisionX(slime);
+                checkSlimeLedge(slime);
+                slime.applyGravity(delta);
+                slimeCollisionY(slime);
+            }
+            
+            //Collision and Jump
+            player.setX(player.getX() + player.getVelocityX() * delta);
+            playerCollisionX();
+            
+            player.setY(player.getY() + player.getVelocityY() * delta);
+            playerCollisionY();
+            
+            // Ladder/Damage checks
+            checkLadder();
+            checkSpikes();
+            checkSlimeTouch();
+            
+            checkWin();
+            // Handle player jump input
+            if (player.isOnGround() && player.isJumpRequested()) {
+                player.setVelocityY(player.getJumpVelocity());
+                player.setOnGround(false);
+                player.clearJumpRequest();
+                player.playJumpSound();
+            }
         }
-
-        //Collision and Jump
-        player.setX(player.getX() + player.getVelocityX() * delta);
-        collisionX();
         
-        player.setY(player.getY() + player.getVelocityY() * delta);
-        collisionY();
-
-        // Ladder/Damage checks
-        checkLadder();
-        checkSpikes();
-        checkSlimeTouch();
-
-        // Handle player jump input
-        if (player.isOnGround() && player.isJumpRequested()) {
-            player.setVelocityY(player.getJumpVelocity());
-            player.setOnGround(false);
-            player.clearJumpRequest();
-            player.playJumpSound();
-        }
-
         camera.update();
+
         //--------------------------------------------------------------
         // Wipe the screen so that we don't see anything from a previous frame.
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -183,7 +179,7 @@ public class FirstScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        font.draw(batch, "Deaths: " + deaths, 3, 14);
+        deathFont.draw(batch, "Deaths: " + deaths, 3, 14);
         player.draw(batch);
 
         // Render all slimes in the array
@@ -191,12 +187,19 @@ public class FirstScreen implements Screen {
             slime.draw(batch);
         }
 
+        // If the player has won, display a win message
+        if (hasWon) {
+            winFont.draw(batch, "YOU WIN!", 95, 220);
+        }
+
         batch.end();
     }
 
-    //------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------
+    //METHODS
+    
     // Stops horizontal movement on platforms
-    private void collisionX(){
+    private void playerCollisionX(){
         Rectangle bounds = player.getHitbox();
 
         for (Rectangle rect : platform){
@@ -238,7 +241,7 @@ public class FirstScreen implements Screen {
 
     //------------------------------------------------------------------
     // Stops vertical movement on platforms.
-    private void collisionY(){
+    private void playerCollisionY(){
         Rectangle bounds = player.getHitbox();
 
         player.setOnGround(false);
@@ -283,15 +286,30 @@ public class FirstScreen implements Screen {
         }
     }
 
+    // Check if the player has reached a win zone
+    private void checkWin(){
+        if (hasWon) return;
+        
+        Rectangle bounds = player.getHitbox();
+        
+        for (Rectangle rect : win) {
+            if (bounds.overlaps(rect)){
+                hasWon = true;
+                winSound.play(0.2f);
+                break;
+            }
+        }
+    }
+
     // Check if the player is on spikes
     private void checkSpikes(){
         Rectangle bounds = player.getHitbox();
 
         for (Rectangle rect : spike) {
             if (bounds.overlaps(rect)){
-            resetPlayer();
-            player.playDeathSound();
-            break;
+                resetPlayer();
+                player.playDeathSound();
+                break;
             }
         }
     }
@@ -336,16 +354,18 @@ public class FirstScreen implements Screen {
     private void checkSlimeLedge(Slime slime){
         float checkX;
 
+        // Check the direction of the slime to determine which side to check for a ledge
         if (slime.getVelocityX() > 0) {
             checkX = slime.getX() + slime.getWidth() + 1;
         } else {
             checkX = slime.getX() - 1;
         }
 
+        // We check slightly below the slime's current position to see if there is ground ahead
         float checkY = slime.getY() - 1;
-
         boolean groundAhead = false;
 
+        // Check if there is ground ahead of the slime by checking if the point (checkX, checkY) is within any platform rectangle
         for (Rectangle rect : platform) {
             if (rect.contains(checkX, checkY)) {
                 groundAhead = true;
@@ -353,6 +373,7 @@ public class FirstScreen implements Screen {
             }
         }
 
+        // If there is no ground ahead, reverse the slime's direction
         if (!groundAhead) {
             slime.reverseDirection();
         }
@@ -364,9 +385,6 @@ public class FirstScreen implements Screen {
         Array<Rectangle> rectangles = new Array<>();
 
         MapObjects objects = map.getLayers().get(layerName).getObjects();
-        
-        //Shows objects
-        System.out.println("Number of objects: " + layerName + " " + objects.getCount());
 
         // Go through the objects and store them to the list
         for (MapObject object : objects) {
@@ -374,11 +392,6 @@ public class FirstScreen implements Screen {
                 Rectangle rect = r.getRectangle();
                 rectangles.add(rect);
             }
-        }
-        
-        //Check for platform data
-        for (Rectangle rect : rectangles) {
-            System.out.println("Platform: " + rect);
         }
 
         return rectangles;
@@ -389,7 +402,6 @@ public class FirstScreen implements Screen {
     public void resize(int width, int height) {
         if(width <= 0 || height <= 0) return;
         viewport.update(width, height);
-
         // Resize your screen here. The parameters represent the new window size.
     }
 
@@ -417,6 +429,8 @@ public class FirstScreen implements Screen {
         mapRenderer.dispose();
         backgroundMusic.dispose();
         slimeTexture.dispose();
-        font.dispose();
+        deathFont.dispose();
+        winFont.dispose();
+        winSound.dispose();
     }
 }

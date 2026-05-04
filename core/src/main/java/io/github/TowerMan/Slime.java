@@ -52,6 +52,7 @@ public class Slime extends Sprite{
     }
 
     // Get the hitbox for collision detection
+    // I did ask ChatGPT for help with this. I could have figured this out I am sure but I was stumped.
     public Rectangle getHitbox(){
         return new Rectangle(
         getX() + 2, 
