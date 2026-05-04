@@ -135,6 +135,7 @@ public class FirstScreen implements Screen {
 
         slimes.move(delta);
         slimeCollisionX();
+        checkSlimeLedge();
         slimes.applyGravity(delta);
         slimeCollisionY();
 
@@ -146,9 +147,9 @@ public class FirstScreen implements Screen {
         collisionY();
 
         checkLadder();
-
         checkSpikes();
 
+        // Handle player jump input
         if (player.isOnGround() && player.isJumpRequested()) {
             player.setVelocityY(player.getJumpVelocity());
             player.setOnGround(false);
@@ -213,9 +214,10 @@ public class FirstScreen implements Screen {
                     slimes.setX(rect.x + rect.width);
                 }
 
-                slimes.setVelocityX(0);
+                slimes.reverseDirection();
 
-                bounds = slimes.getBoundingRectangle();
+                //bounds = slimes.getBoundingRectangle();
+                break;
             }
         }
     }
@@ -304,6 +306,32 @@ public class FirstScreen implements Screen {
         deaths++;
     }
 
+    // Slime checks for ledges and turns around when it hits one. It also turns around when it hits a wall.
+    private void checkSlimeLedge() {
+        float checkX;
+
+        if (slimes.getVelocityX() > 0) {
+            checkX = slimes.getX() + slimes.getWidth() + 1;
+        } else {
+            checkX = slimes.getX() - 1;
+        }
+
+        float checkY = slimes.getY() - 1;
+
+        boolean groundAhead = false;
+
+        for (Rectangle rect : platform) {
+            if (rect.contains(checkX, checkY)) {
+                groundAhead = true;
+                break;
+            }
+        }
+
+        if (!groundAhead) {
+            slimes.reverseDirection();
+        }
+    }
+
     //------------------------------------------------------------------
     // Method for getting rectangle objects from map!
     private Array<Rectangle> loadRectangles(String layerName) {
@@ -362,5 +390,6 @@ public class FirstScreen implements Screen {
         map.dispose();
         mapRenderer.dispose();
         backgroundMusic.dispose();
+        slimeTexture.dispose();
     }
 }

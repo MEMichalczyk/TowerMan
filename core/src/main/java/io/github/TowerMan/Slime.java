@@ -45,7 +45,7 @@ public class Slime extends Sprite{
     public void reverseDirection() {
         direction *= -1;
         velocityX = speed * direction;
-        setFlip(true, false);
+        flip(true, false);
     }   
 
     public float getVelocityX() {
