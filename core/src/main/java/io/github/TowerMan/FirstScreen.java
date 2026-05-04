@@ -320,7 +320,7 @@ public class FirstScreen implements Screen {
         Rectangle bounds = player.getHitbox();
         
         for (Rectangle rect : win) {
-            if (bounds.overlaps(rect)){
+            if (bounds.overlaps(rect) && keysCollected >= 1) { // Check if the player has collected at least 1 key. Adjust as needed.
                 hasWon = true;
                 winSound.play(0.2f);
                 break;

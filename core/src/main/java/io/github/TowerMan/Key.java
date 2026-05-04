@@ -9,6 +9,7 @@ public class Key extends Sprite {
     @SuppressWarnings("FieldMayBeFinal")
     private boolean collected = false;
 
+    @SuppressWarnings("FieldMayBeFinal")
     private Sound keyCollect;
 
     public Key(Texture texture, float x, float y) {
