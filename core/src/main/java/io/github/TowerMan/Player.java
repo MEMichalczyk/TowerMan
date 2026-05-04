@@ -170,10 +170,6 @@ public class Player extends Sprite {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
-        }
-
         /* THIS WAS FOR DEBUGGING PURPOSES, TO CHECK PLAYER POSITION. IGNORE.
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             System.out.println("Player position: X=" + this.getX() + ", Y=" + this.getY());

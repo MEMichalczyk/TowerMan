@@ -127,11 +127,10 @@ public class FirstScreen implements Screen {
     @Override
     public void render(float delta) {
         // Update player position and apply gravity
-        player.move();
-        player.applyGravity(delta);
-
-        // Update slime positions and apply gravity
-        if(!hasWon) { // Only update if player hasn't won yet
+        if(!hasWon) {
+            player.move();
+            player.applyGravity(delta);
+            
             for (Slime slime : slimes){
                 slime.move(delta);
                 slimeCollisionX(slime);
@@ -179,7 +178,7 @@ public class FirstScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
-        deathFont.draw(batch, "Deaths: " + deaths, 3, 14);
+        deathFont.draw(batch, "Deaths: " + deaths, 7, 14);
         player.draw(batch);
 
         // Render all slimes in the array
@@ -189,7 +188,12 @@ public class FirstScreen implements Screen {
 
         // If the player has won, display a win message
         if (hasWon) {
-            winFont.draw(batch, "YOU WIN!", 95, 220);
+            winFont.draw(batch, "YOU WIN!", 90, 220);
+            deathFont.draw(batch, "ESC TO EXIT", 115, 190);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
         }
 
         batch.end();
