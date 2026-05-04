@@ -183,7 +183,7 @@ public class FirstScreen implements Screen {
     //------------------------------------------------------------------
     // Stops horizontal movement on platforms
     private void collisionX(){
-        Rectangle bounds = player.getBoundingRectangle();
+        Rectangle bounds = player.getHitbox();
 
         for (Rectangle rect : platform){
             if (bounds.overlaps(rect)){
@@ -197,13 +197,13 @@ public class FirstScreen implements Screen {
 
                 player.setVelocityX(0);
 
-                bounds = player.getBoundingRectangle();
+                bounds = player.getHitbox();
             }
         }
     }
 
     private void slimeCollisionX(){
-        Rectangle bounds = slimes.getBoundingRectangle();
+        Rectangle bounds = slimes.getHitbox();
 
         for (Rectangle rect : platform){
             if (bounds.overlaps(rect)){
@@ -217,7 +217,7 @@ public class FirstScreen implements Screen {
 
                 slimes.reverseDirection();
 
-                //bounds = slimes.getBoundingRectangle();
+                //bounds = slimes.getHitbox();
                 break;
             }
         }
@@ -226,7 +226,7 @@ public class FirstScreen implements Screen {
     //------------------------------------------------------------------
     // Stops vertical movement on platforms.
     private void collisionY(){
-        Rectangle bounds = player.getBoundingRectangle();
+        Rectangle bounds = player.getHitbox();
 
         player.setOnGround(false);
 
@@ -243,14 +243,14 @@ public class FirstScreen implements Screen {
                     player.setVelocityY(0);
                 }
 
-                bounds = player.getBoundingRectangle();
+                bounds = player.getHitbox();
 
             }
         }
     }
 
     private void slimeCollisionY(){
-        Rectangle bounds = slimes.getBoundingRectangle();
+        Rectangle bounds = slimes.getHitbox();
 
         for (Rectangle rect : platform){
             if (bounds.overlaps(rect)){
@@ -264,7 +264,7 @@ public class FirstScreen implements Screen {
                     slimes.setVelocityY(0);
                 }
 
-                bounds = slimes.getBoundingRectangle();
+                bounds = slimes.getHitbox();
 
             }
         }
@@ -272,7 +272,7 @@ public class FirstScreen implements Screen {
 
     // Check if the player is on spikes
     private void checkSpikes(){
-        Rectangle bounds = player.getBoundingRectangle();
+        Rectangle bounds = player.getHitbox();
 
         for (Rectangle rect : spike) {
             if (bounds.overlaps(rect)){
@@ -284,14 +284,14 @@ public class FirstScreen implements Screen {
     }
 
     private void checkSlimeTouch(){
-        if (player.getBoundingRectangle().overlaps(slimes.getBoundingRectangle())){
+        if (player.getHitbox().overlaps(slimes.getHitbox())){
             resetPlayer();
             player.playDeathSound();
         }
     }
 
     private void checkLadder(){
-        Rectangle bounds = player.getBoundingRectangle();
+        Rectangle bounds = player.getHitbox();
 
         player.setOnLadder(false);
 

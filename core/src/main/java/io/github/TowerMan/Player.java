@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Player extends Sprite {
 
@@ -195,6 +196,14 @@ public class Player extends Sprite {
                 ", onGround= " + onGround +
                 ", facingDirection= " + facingDirection +
                 '}';
+    }
+
+    public Rectangle getHitbox(){
+        return new Rectangle(
+        getX() + 2, 
+        getY(),
+        getWidth() - 4,
+        getHeight());
     }
 
     //------------------------------------------------------------------

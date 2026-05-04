@@ -2,6 +2,7 @@ package io.github.TowerMan;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Slime extends Sprite{
     @SuppressWarnings("FieldMayBeFinal")
@@ -22,7 +23,7 @@ public class Slime extends Sprite{
     public Slime(Texture texture, float posX, float posY) {
         super(texture);
         setPosition(posX, posY);
-        setSize(14, 14);
+        setSize(16, 16);
 
         speed = 35f;
         gravity = -700f;
@@ -46,7 +47,15 @@ public class Slime extends Sprite{
         direction *= -1;
         velocityX = speed * direction;
         flip(true, false);
-    }   
+    }
+
+    public Rectangle getHitbox(){
+        return new Rectangle(
+        getX() + 2, 
+        getY(),
+        getWidth() - 4,
+        getHeight() - 4);
+    }
 
     public float getVelocityX() {
         return velocityX;
