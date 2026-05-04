@@ -22,7 +22,7 @@ public class Slime extends Sprite{
     public Slime(Texture texture, float posX, float posY) {
         super(texture);
         setPosition(posX, posY);
-        setSize(16, 16);
+        setSize(14, 14);
 
         speed = 35f;
         gravity = -700f;

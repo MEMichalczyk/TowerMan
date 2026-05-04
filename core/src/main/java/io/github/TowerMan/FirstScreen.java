@@ -148,6 +148,7 @@ public class FirstScreen implements Screen {
 
         checkLadder();
         checkSpikes();
+        checkSlimeTouch();
 
         // Handle player jump input
         if (player.isOnGround() && player.isJumpRequested()) {
@@ -279,6 +280,13 @@ public class FirstScreen implements Screen {
             player.playDeathSound();
             break;
             }
+        }
+    }
+
+    private void checkSlimeTouch(){
+        if (player.getBoundingRectangle().overlaps(slimes.getBoundingRectangle())){
+            resetPlayer();
+            player.playDeathSound();
         }
     }
 
