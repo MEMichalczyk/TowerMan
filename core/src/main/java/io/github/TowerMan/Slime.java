@@ -20,6 +20,7 @@ public class Slime extends Sprite{
     @SuppressWarnings("FieldMayBeFinal")
     private int direction;
 
+    // Constructor to initialize the slime with a texture and position
     public Slime(Texture texture, float posX, float posY) {
         super(texture);
         setPosition(posX, posY);
@@ -43,18 +44,20 @@ public class Slime extends Sprite{
         setY(getY() + velocityY * deltaTime);
     }
 
+    // Reverse the slime's direction and update its velocity
     public void reverseDirection() {
         direction *= -1;
         velocityX = speed * direction;
         flip(true, false);
     }
 
+    // Get the hitbox for collision detection
     public Rectangle getHitbox(){
         return new Rectangle(
         getX() + 2, 
         getY(),
-        getWidth() - 4,
-        getHeight() - 4);
+        getWidth() - 8,
+        getHeight() - 6);
     }
 
     public float getVelocityX() {

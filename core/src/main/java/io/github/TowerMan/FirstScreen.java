@@ -154,6 +154,7 @@ public class FirstScreen implements Screen {
         player.setY(player.getY() + player.getVelocityY() * delta);
         collisionY();
 
+        // Ladder/Damage checks
         checkLadder();
         checkSpikes();
         checkSlimeTouch();
@@ -178,7 +179,7 @@ public class FirstScreen implements Screen {
         mapRenderer.render();
 
         //--------------------------------------------------------------
-        // Render the player and slimes
+        // Render the player and the slimes
         batch.setProjectionMatrix(camera.combined);
 
         batch.begin();
@@ -215,6 +216,7 @@ public class FirstScreen implements Screen {
         }
     }
 
+    // Stops horizontal movement on platforms for slimes and reverses their direction
     private void slimeCollisionX(Slime slime){
         Rectangle bounds = slime.getHitbox();
 
@@ -260,6 +262,7 @@ public class FirstScreen implements Screen {
         }
     }
 
+    // Stops vertical movement on platforms for slimes
     private void slimeCollisionY(Slime slime){
         Rectangle bounds = slime.getHitbox();
 
@@ -276,7 +279,6 @@ public class FirstScreen implements Screen {
                 }
 
                 bounds = slime.getHitbox();
-
             }
         }
     }
@@ -294,6 +296,7 @@ public class FirstScreen implements Screen {
         }
     }
 
+    // Check if the player is touching a slime
     private void checkSlimeTouch(){
         for (Slime slime : slimes) {
             if (player.getHitbox().overlaps(slime.getHitbox())) {
@@ -304,6 +307,7 @@ public class FirstScreen implements Screen {
         }
     }
 
+    // Check if the player is on a ladder and allow climbing
     private void checkLadder(){
         Rectangle bounds = player.getHitbox();
 
@@ -413,5 +417,6 @@ public class FirstScreen implements Screen {
         mapRenderer.dispose();
         backgroundMusic.dispose();
         slimeTexture.dispose();
+        font.dispose();
     }
 }
