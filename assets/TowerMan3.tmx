@@ -148,14 +148,14 @@
    <property name="type" value="platform"/>
   </properties>
   <object id="15" x="0" y="48.875" width="146.602" height="8.5"/>
-  <object id="16" x="205.542" y="32.875" width="63.4242" height="8.5"/>
+  <object id="16" x="205.542" y="32.875" width="66.1742" height="8.5"/>
   <object id="17" x="157.042" y="97.125" width="85.1667" height="8.5"/>
-  <object id="18" x="172.25" y="161.25" width="96.1364" height="8.5"/>
+  <object id="18" x="172.25" y="161.25" width="99.8864" height="8.5"/>
   <object id="19" x="220.182" y="224.75" width="99.8182" height="8.5"/>
   <object id="20" x="156" y="224.75" width="24" height="8.5"/>
-  <object id="21" x="51.8295" y="225.125" width="48.966" height="8.5"/>
+  <object id="21" x="48.0795" y="225.125" width="52.716" height="8.5"/>
   <object id="22" x="0" y="288.75" width="131.932" height="8.5"/>
-  <object id="23" x="172.25" y="305" width="80.3523" height="8.5"/>
+  <object id="23" x="172.25" y="305" width="83.625" height="8.5"/>
   <object id="24" x="275.25" y="353.5" width="30.25" height="15.375"/>
   <object id="25" x="291.25" y="338.875" width="12" height="14.5"/>
   <object id="26" x="0.125" y="113.5" width="62.875" height="6.5"/>

@@ -168,8 +168,11 @@ public class Player extends Sprite {
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
                 velocityY = -80f;
             }
-
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            System.out.println("Player position: X=" + this.getX() + ", Y=" + this.getY());
+}
     }
 
     // For player being on a ladder set to onLadder

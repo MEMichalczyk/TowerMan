@@ -50,7 +50,7 @@ public class FirstScreen implements Screen {
     private int deaths = 0;
     private BitmapFont font;
 
-    private Slime slimes;
+    private Array<Slime> slimes;
     private Texture slimeTexture;
 
     //------------------------------------------------------------------
@@ -113,7 +113,12 @@ public class FirstScreen implements Screen {
 
         // Initialize the slime and its texture
         slimeTexture = new Texture("Slime.png");
-        slimes = new Slime(slimeTexture, 200, 100);
+        slimes = new Array<>();
+        slimes.add(new Slime(slimeTexture, 220, 79));
+        slimes.add(new Slime(slimeTexture, 100, 97));
+        slimes.add(new Slime(slimeTexture, 222, 225));
+        slimes.add(new Slime(slimeTexture, 195, 287));
+        slimes.add(new Slime(slimeTexture, 70, 337));
 
         System.out.println("Player starts at: X=" + player.getX() + ", Y=" + player.getY());
 
@@ -133,11 +138,14 @@ public class FirstScreen implements Screen {
         player.move();
         player.applyGravity(delta);
 
-        slimes.move(delta);
-        slimeCollisionX();
-        checkSlimeLedge();
-        slimes.applyGravity(delta);
-        slimeCollisionY();
+        // Update slime positions and apply gravity
+        for (Slime slime : slimes){
+        slime.move(delta);
+        slimeCollisionX(slime);
+        checkSlimeLedge(slime);
+        slime.applyGravity(delta);
+        slimeCollisionY(slime);
+        }
 
         //Collision and Jump
         player.setX(player.getX() + player.getVelocityX() * delta);
@@ -176,7 +184,12 @@ public class FirstScreen implements Screen {
         batch.begin();
         font.draw(batch, "Deaths: " + deaths, 3, 14);
         player.draw(batch);
-        slimes.draw(batch);
+
+        // Render all slimes in the array
+        for (Slime slime : slimes) {
+            slime.draw(batch);
+        }
+
         batch.end();
     }
 
@@ -202,22 +215,20 @@ public class FirstScreen implements Screen {
         }
     }
 
-    private void slimeCollisionX(){
-        Rectangle bounds = slimes.getHitbox();
+    private void slimeCollisionX(Slime slime){
+        Rectangle bounds = slime.getHitbox();
 
         for (Rectangle rect : platform){
             if (bounds.overlaps(rect)){
-                if (slimes.getVelocityX() > 0){
-                    slimes.setX(rect.x - slimes.getWidth());
+                if (slime.getVelocityX() > 0){
+                    slime.setX(rect.x - slime.getWidth());
                 }
 
-                if (slimes.getVelocityX() < 0) {
-                    slimes.setX(rect.x + rect.width);
+                if (slime.getVelocityX() < 0) {
+                    slime.setX(rect.x + rect.width);
                 }
 
-                slimes.reverseDirection();
-
-                //bounds = slimes.getHitbox();
+                slime.reverseDirection();
                 break;
             }
         }
@@ -249,22 +260,22 @@ public class FirstScreen implements Screen {
         }
     }
 
-    private void slimeCollisionY(){
-        Rectangle bounds = slimes.getHitbox();
+    private void slimeCollisionY(Slime slime){
+        Rectangle bounds = slime.getHitbox();
 
         for (Rectangle rect : platform){
             if (bounds.overlaps(rect)){
-                if (slimes.getVelocityY() <= 0){
-                    slimes.setY(rect.y + rect.height);
-                    slimes.setVelocityY(0);
+                if (slime.getVelocityY() <= 0){
+                    slime.setY(rect.y + rect.height);
+                    slime.setVelocityY(0);
                 }
 
-                if (slimes.getVelocityY() > 0) {
-                    slimes.setY(rect.y - slimes.getHeight());
-                    slimes.setVelocityY(0);
+                if (slime.getVelocityY() > 0) {
+                    slime.setY(rect.y - slime.getHeight());
+                    slime.setVelocityY(0);
                 }
 
-                bounds = slimes.getHitbox();
+                bounds = slime.getHitbox();
 
             }
         }
@@ -284,9 +295,12 @@ public class FirstScreen implements Screen {
     }
 
     private void checkSlimeTouch(){
-        if (player.getHitbox().overlaps(slimes.getHitbox())){
-            resetPlayer();
-            player.playDeathSound();
+        for (Slime slime : slimes) {
+            if (player.getHitbox().overlaps(slime.getHitbox())) {
+                resetPlayer();
+                player.playDeathSound();
+                break;
+            }
         }
     }
 
@@ -315,16 +329,16 @@ public class FirstScreen implements Screen {
     }
 
     // Slime checks for ledges and turns around when it hits one. It also turns around when it hits a wall.
-    private void checkSlimeLedge() {
+    private void checkSlimeLedge(Slime slime){
         float checkX;
 
-        if (slimes.getVelocityX() > 0) {
-            checkX = slimes.getX() + slimes.getWidth() + 1;
+        if (slime.getVelocityX() > 0) {
+            checkX = slime.getX() + slime.getWidth() + 1;
         } else {
-            checkX = slimes.getX() - 1;
+            checkX = slime.getX() - 1;
         }
 
-        float checkY = slimes.getY() - 1;
+        float checkY = slime.getY() - 1;
 
         boolean groundAhead = false;
 
@@ -336,7 +350,7 @@ public class FirstScreen implements Screen {
         }
 
         if (!groundAhead) {
-            slimes.reverseDirection();
+            slime.reverseDirection();
         }
     }
 

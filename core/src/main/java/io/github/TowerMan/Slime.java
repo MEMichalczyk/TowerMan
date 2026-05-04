@@ -25,7 +25,7 @@ public class Slime extends Sprite{
         setPosition(posX, posY);
         setSize(16, 16);
 
-        speed = 35f;
+        speed = 30f;
         gravity = -700f;
 
         direction = -1;
