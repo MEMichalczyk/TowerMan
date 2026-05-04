@@ -49,6 +49,7 @@ public class FirstScreen implements Screen {
     private Array<Rectangle> win;
 
     private int deaths;
+    private int keysCollected;
     private BitmapFont font;
     private BitmapFont winFont;
 
@@ -57,6 +58,9 @@ public class FirstScreen implements Screen {
 
     private boolean hasWon = false;
     private Sound winSound;
+
+    private Texture keyTexture;
+    private Array<Key> keys;
 
     //-----------------------------------------------------------------------------------------------------------------
     //SHOW
@@ -80,7 +84,7 @@ public class FirstScreen implements Screen {
 
 
         // Map
-        map = new TmxMapLoader().load("TowerMan3.tmx");
+        map = new TmxMapLoader().load("TowerMan.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1f); // Adjust unit scale as needed
 
         //--------------------------------------------------------------
@@ -98,6 +102,7 @@ public class FirstScreen implements Screen {
         //--------------------------------------------------------------
 
         deaths = 0;
+        keysCollected = 0;
         
         // Initialize the player and its texture
         batch = new SpriteBatch();
@@ -115,6 +120,11 @@ public class FirstScreen implements Screen {
         slimes.add(new Slime(slimeTexture, 195, 287));
         slimes.add(new Slime(slimeTexture, 70, 337));
 
+        // Initialize keys and its texture
+        keyTexture = new Texture("Key.png");
+        keys = new Array<>();
+        keys.add(new Key(keyTexture, 20, 300)); // Example position
+        
         //--------------------------------------------------------------
         // Load and play background music
         winSound = Gdx.audio.newSound(Gdx.files.internal("win.mp3"));
@@ -154,6 +164,8 @@ public class FirstScreen implements Screen {
             checkSlimeTouch();
             
             checkWin();
+            checkKey();
+
             // Handle player jump input
             if (player.isOnGround() && player.isJumpRequested()) {
                 player.setVelocityY(player.getJumpVelocity());
@@ -181,11 +193,18 @@ public class FirstScreen implements Screen {
 
         batch.begin();
         font.draw(batch, "Deaths: " + deaths, 7, 14);
+        font.draw(batch, "X " + keysCollected, 290, 14);
         player.draw(batch);
 
         // Render all slimes in the array
         for (Slime slime : slimes) {
             slime.draw(batch);
+        }
+
+        for (Key key : keys) {
+            if (!key.isCollected()) {
+                key.draw(batch);
+            }
         }
 
         // If the player has won, display a win message
@@ -345,6 +364,18 @@ public class FirstScreen implements Screen {
                     player.setOnLadder(true);
                     break;
                 }
+            }
+        }
+    }
+
+    // Check if the player is collecting a key
+    private void checkKey(){
+        Rectangle bounds = player.getHitbox();
+
+        for (Key key : FirstScreen.this.keys) {
+            if (!key.isCollected() && bounds.overlaps(key.getBoundingRectangle())) {
+                key.collect();
+                keysCollected++;
             }
         }
     }
