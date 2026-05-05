@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -50,6 +51,8 @@ public class FirstScreen implements Screen {
 
     private int deaths;
     private int keysCollected;
+    private int coinsCollected;
+
     private BitmapFont font;
     private BitmapFont winFont;
 
@@ -61,6 +64,12 @@ public class FirstScreen implements Screen {
 
     private Texture keyTexture;
     private Array<Key> keys;
+
+    private Texture coinTexture;
+    private Array<Coin> coins;
+
+    private ShapeRenderer shapeRenderer;
+    private boolean showHitboxes = false;
 
     //-----------------------------------------------------------------------------------------------------------------
     //SHOW
@@ -99,11 +108,13 @@ public class FirstScreen implements Screen {
 
         // The Array of Win zones
         win = loadRectangles("Win");
+
         //--------------------------------------------------------------
 
         // Initialize deaths and keys collected to 0
         deaths = 0;
         keysCollected = 0;
+        coinsCollected= 0;
         
         // Initialize the player and its texture
         batch = new SpriteBatch();
@@ -125,7 +136,20 @@ public class FirstScreen implements Screen {
         keyTexture = new Texture("Key.png");
         keys = new Array<>();
         keys.add(new Key(keyTexture, 20, 300)); // Example position
-        
+
+        // Initialize coins and its texture
+        // The Array of Coins
+        coinTexture = new Texture("Coin.png");
+
+        coins = new Array<>();
+        Array<Rectangle> coinRects = loadRectangles("Coins");
+        // Create and add coins to the array based on the rectangles loaded from the map. Adjust as needed.
+        for (Rectangle rect : coinRects) {
+            coins.add(new Coin(coinTexture, rect.x, rect.y));
+        }
+
+        shapeRenderer = new ShapeRenderer(); //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
         //--------------------------------------------------------------
         // Load and play background music
         winSound = Gdx.audio.newSound(Gdx.files.internal("win.mp3"));
@@ -166,6 +190,7 @@ public class FirstScreen implements Screen {
             
             checkWin();
             checkKey();
+            checkCoin();
 
             // Handle player jump input
             if (player.isOnGround() && player.isJumpRequested()) {
@@ -195,11 +220,18 @@ public class FirstScreen implements Screen {
         batch.begin();
         font.draw(batch, "Deaths: " + deaths, 7, 14);
         font.draw(batch, "X " + keysCollected, 290, 14);
+        font.draw(batch, "X " + coinsCollected, 240, 14);
         player.draw(batch);
 
         // Render all slimes in the array
         for (Slime slime : slimes) {
             slime.draw(batch);
+        }
+
+        for (Coin coin : coins) {
+            if (!coin.isCollected()) {
+                coin.draw(batch);
+            }
         }
 
         for (Key key : keys) {
@@ -219,9 +251,41 @@ public class FirstScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
+        
 
         batch.end();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            showHitboxes = !showHitboxes;
+        }
+        
+        if (showHitboxes) {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        
+        // Player
+        Rectangle p = player.getHitbox();
+        shapeRenderer.rect(p.x, p.y, p.width, p.height);
+        
+        // Slimes
+        for (Slime slime : slimes) {
+            Rectangle s = slime.getHitbox();
+            shapeRenderer.rect(s.x, s.y, s.width, s.height);
+        }
+        // Coins
+        for (Coin coin : coins) {
+            Rectangle c = coin.getHitbox();
+            shapeRenderer.rect(c.x, c.y, c.width, c.height);
+        }
+        // Keys
+        for (Key key : keys) {
+            Rectangle k = key.getHitbox();
+            shapeRenderer.rect(k.x, k.y, k.width, k.height);
+        }
+        
+        shapeRenderer.end();
     }
+}
 
     //--------------------------------------------------------------------------------------------------
     //METHODS
@@ -381,6 +445,17 @@ public class FirstScreen implements Screen {
         }
     }
 
+    private void checkCoin(){
+        Rectangle bounds = player.getHitbox();
+
+        for (Coin coin : FirstScreen.this.coins) {
+            if (!coin.isCollected() && bounds.overlaps(coin.getBoundingRectangle())) {
+                coin.collect();
+                coinsCollected++;
+            }
+        }
+    }
+
     // Reset the player to the start of the level
     private void resetPlayer() {
         player.setPosition(2 * 16, 2 * 16);
@@ -472,5 +547,7 @@ public class FirstScreen implements Screen {
         font.dispose();
         winFont.dispose();
         winSound.dispose();
+        keyTexture.dispose();
+        shapeRenderer.dispose();
     }
 }

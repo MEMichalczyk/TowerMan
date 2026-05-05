@@ -59,7 +59,7 @@ public class Slime extends Sprite{
     // I did ask ChatGPT for help with this. I could have figured this out I am sure but I was stumped.
     public Rectangle getHitbox(){
         return new Rectangle(
-        getX() + 2, 
+        getX() + 4, 
         getY(),
         getWidth() - 8,
         getHeight() - 6);

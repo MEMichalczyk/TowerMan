@@ -205,10 +205,10 @@ public class Player extends Sprite {
     // Get the hitbox for collision detection
     public Rectangle getHitbox(){
         return new Rectangle(
-        getX() + 2, 
+        getX() + 4, 
         getY(),
-        getWidth() - 8,
-        getHeight() - 6);
+        getWidth() - 10,
+        getHeight() - 3);
     }
 
     //------------------------------------------------------------------

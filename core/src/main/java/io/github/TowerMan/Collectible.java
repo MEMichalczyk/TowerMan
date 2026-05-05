@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Collectible extends Sprite {
     private boolean collected = false;
@@ -25,4 +26,11 @@ public class Collectible extends Sprite {
         collectSound.play(0.2f);
     }
     
+    public Rectangle getHitbox(){
+        return new Rectangle(
+        getX(), 
+        getY(),
+        getWidth(),
+        getHeight());
+    }
 }
