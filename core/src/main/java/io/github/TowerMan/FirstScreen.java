@@ -554,5 +554,6 @@ public class FirstScreen implements Screen {
         winSound.dispose();
         keyTexture.dispose();
         shapeRenderer.dispose();
+        coinTexture.dispose();
     }
 }
