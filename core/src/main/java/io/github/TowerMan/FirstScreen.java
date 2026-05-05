@@ -88,8 +88,10 @@ public class FirstScreen implements Screen {
         font = new BitmapFont();
 
         winFont = new BitmapFont();
-        winFont.getData().setScale(2); // Make the win message larger. Adjust as needed.
-        winFont.setColor(1, 1, 0, 1); // Set the win message color to yellow. Adjust as needed.
+        // Make the win message larger. Adjust as needed.
+        winFont.getData().setScale(2);
+         // Set the win message color to yellow. Adjust as needed.
+        winFont.setColor(1, 1, 0, 1);
 
 
         // Map
@@ -118,11 +120,11 @@ public class FirstScreen implements Screen {
         
         // Initialize the player and its texture
         batch = new SpriteBatch();
-        playerTexture = new Texture("Player.png");
+        playerTexture = new Texture(Gdx.files.internal("Player.png"));
         player = new Player(playerTexture);
 
         // Initialize the slimes and its textures
-        slimeTexture = new Texture("Slime.png");
+        slimeTexture = new Texture(Gdx.files.internal("Slime.png"));
         
         // Create and add slimes to the array. Adjust positions as needed. Organized right now bottom to top.
         slimes = new Array<>();
@@ -133,22 +135,24 @@ public class FirstScreen implements Screen {
         slimes.add(new Slime(slimeTexture, 70, 337));
 
         // Initialize keys and its texture
-        keyTexture = new Texture("Key.png");
+        keyTexture = new Texture(Gdx.files.internal("Key.png"));
         keys = new Array<>();
         keys.add(new Key(keyTexture, 20, 300)); // Example position
 
         // Initialize coins and its texture
         // The Array of Coins
-        coinTexture = new Texture("Coin.png");
+        coinTexture = new Texture(Gdx.files.internal("Coin.png"));
 
         coins = new Array<>();
         Array<Rectangle> coinRects = loadRectangles("Coins");
+        
         // Create and add coins to the array based on the rectangles loaded from the map. Adjust as needed.
         for (Rectangle rect : coinRects) {
             coins.add(new Coin(coinTexture, rect.x, rect.y));
         }
 
-        shapeRenderer = new ShapeRenderer(); //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        // Part of ChatGPT help with hitboxes.
+        shapeRenderer = new ShapeRenderer();
 
         //--------------------------------------------------------------
         // Load and play background music
@@ -255,6 +259,7 @@ public class FirstScreen implements Screen {
 
         batch.end();
 
+        // Debug hitboxes when F1 is pressed (Taken from ChatGPT)
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             showHitboxes = !showHitboxes;
         }

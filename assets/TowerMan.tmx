@@ -149,7 +149,7 @@
   <properties>
    <property name="type" value="platform"/>
   </properties>
-  <object id="15" x="64" y="49" width="82.602" height="8.5"/>
+  <object id="15" x="0.5" y="49" width="146.102" height="8.5"/>
   <object id="16" x="205.542" y="32.875" width="66.1742" height="8.5"/>
   <object id="17" x="157.042" y="97.125" width="85.1667" height="8.5"/>
   <object id="18" x="172.25" y="161.25" width="99.8864" height="8.5"/>
@@ -169,7 +169,6 @@
   <object id="40" x="269.458" y="96.4167" width="50.4167" height="8.5"/>
   <object id="44" x="12.5" y="98.75" width="16.75" height="14.25"/>
   <object id="45" x="12.3333" y="0" width="15" height="49"/>
-  <object id="74" x="0.613773" y="49" width="63.251" height="8.5"/>
  </objectgroup>
  <objectgroup id="9" name="Coins">
   <object id="50" x="140.5" y="332.083" width="6.66667" height="8.33333"/>
